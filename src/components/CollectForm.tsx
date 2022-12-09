@@ -8,14 +8,32 @@ function CollectForm() {
     const [LinkedIn, setLinkedIn] = useState("")
     const [Github, setGithub] = useState("")
     const [Message, setMessage] = useState("")
-    
+    const [File, setFile] = useState()
+
     function getData() {
-        console.log(Fname, Lname, Email, Phone, LinkedIn, Github, Message)
+        let data = new FormData()
+        data.append("Fname", Fname)
+        data.append("Lname", Fname)
+        data.append("Email", Email)
+        data.append("Phone", Phone)
+        data.append("Github", Github)
+        data.append("Linkedin", LinkedIn)
+        data.append("Message", Message)
+        data.append('resume', File)
+        // data.append('file', )
+
+        const body = { Fname, Lname, Email, Phone, Github, LinkedIn, Message }
+        fetch('http://localhost:5000/getdata', {
+            method: 'POST',
+            body: data
+        }).then(res => res.json())
+            .then(res => console.log(res));
+
     }
 
     return (
         <div className="  rounded-lg mx-auto max-w-screen-xl m-4 content-center bg-gray-100 p-8 shadow-lg lg:col-span-3 lg:p-12">
-            <form action="" className="space-y-4">
+            <div className="space-y-4">
                 <p className='text-xl'>Apply for this job</p>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div>
@@ -99,7 +117,9 @@ function CollectForm() {
                     <fieldset className="w-full  ">
                         <label className="block text-sm font-medium">upload resume</label>
                         <div className="flex">
-                            <input type="file" name="files" id="files" className=" border-2 border-dashed rounded-md  " />
+                            <input type="file" name="files" id="files"
+                                onChange={(e) => setFile(e.target.files[0])}
+                                className=" border-2 border-dashed rounded-md  " />
                         </div>
                     </fieldset>
                 </div>
@@ -116,7 +136,7 @@ function CollectForm() {
 
                     </button>
                 </div>
-            </form>
+            </div>
         </div>
     )
 }
