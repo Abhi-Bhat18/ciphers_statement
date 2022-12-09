@@ -29,12 +29,14 @@ def find_category(category):
     return category
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE'] = 'sqlite:///resume.db'
+app.app_context()
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db = SQLAlchemy(app)
 
+app.app_context().push()
 
 #Creating Database models 
-class Basic_info(db.model):
+class Basic_info(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(200),nullable=False)
     first_name = db.Column(db.String(200),nullable=False)
@@ -44,9 +46,12 @@ class Basic_info(db.model):
     message = db.Column(db.String(1000000),nullable=False)
     resume_data = db.Column(db.String(1000000),nullable=False)   
 
-@app.route('/',)
+
+
+@app.route('/',methods=['POST','GET'])
 def index():
     return "Hello world"
+
 
 # @app.route('/predict',methods=['POST'])
 # def predict():
