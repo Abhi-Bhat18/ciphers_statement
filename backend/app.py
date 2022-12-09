@@ -8,29 +8,32 @@ from werkzeug.utils import secure_filename
 from flask_cors import CORS, cross_origin
 
 
-#importing ML models
-from flask import Flask,render_template
+# importing ML models
+from flask import Flask, render_template
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.model_selection import train_test_split
 from sklearn.metrics.pairwise import cosine_similarity
 
 resume = pd.read_csv("data/cleaned_dataset.csv")
-resume.drop("Category",axis=1,inplace=True)
+resume.drop("Category", axis=1, inplace=True)
 old = pd.read_csv("data/UpdatedResumeDataSet.csv")
 resume['Category'] = old['Category']
 
-X = resume[['Category','Name','cleaned_resume','overall_experience']]
+X = resume[['Category', 'Name', 'cleaned_resume', 'overall_experience']]
 y = resume['Category']
 
-X_train,X_test,y_train,y_test = train_test_split(X,y,random_state=42, test_size=0.2)
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, random_state=42, test_size=0.2)
 X_train.reset_index(inplace=True)
-X_train.drop("index",axis=1,inplace=True)
+X_train.drop("index", axis=1, inplace=True)
 
 tfidf = TfidfVectorizer(stop_words="english")
 tfidf_fit = tfidf.fit_transform(X_train['cleaned_resume'])
-cosine_sim = cosine_similarity(tfidf_fit,tfidf_fit)
-index_sim = pd.Series(X_train.index, index=X_train['Category']).drop_duplicates()
+cosine_sim = cosine_similarity(tfidf_fit, tfidf_fit)
+index_sim = pd.Series(
+    X_train.index, index=X_train['Category']).drop_duplicates()
+
 
 def get_recommendations(title):
     idx = index_sim[title]
@@ -41,7 +44,7 @@ def get_recommendations(title):
     return list(X_train['Name'].iloc[resume_indices].values)
 
 
-#Flask app 
+# Flask app
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///resume.db'
@@ -50,6 +53,8 @@ app.app_context().push()
 CORS(app)
 
 # Creating Database models
+
+
 class Basic_info(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(200), nullable=False)
@@ -61,16 +66,20 @@ class Basic_info(db.Model):
     message = db.Column(db.String(1000000), nullable=False)
     resume_data = db.Column(db.String(1000000), nullable=False)
 
-#Routes
-@app.route('/',methods=['POST','GET'])
+# Routes
+
+
+@app.route('/', methods=['POST', 'GET'])
 def index():
     return "Hello world"
 
-#Stroring data in data set     
+# Stroring data in data set
+
+
 @app.route('/getdata', methods=['POST'])
 def getdata():
     try:
-            #Collecting data from the request
+        # Collecting data from the request
         data = request.form
         print(data)
         Fname = data['Fname']
@@ -81,8 +90,8 @@ def getdata():
         LinkedIn = data["Linkedin"]
         Message = data["Message"]
         resumeFile = request.files["resume"]
-        resumeFile.save(secure_filename(resumeFile.filename))   
-        
+        resumeFile.save(secure_filename(resumeFile.filename))
+
         # extracting text from pdf
         pdfFileObj = open(resumeFile.filename, 'rb')
         pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
@@ -96,16 +105,15 @@ def getdata():
         pdfFileObj.close()
 
         user = Basic_info(
-            first_name =Fname,
-            last_name = Lname,
-            email = Email,
-            phone = Phone,
-            github_link = Github,
-            linked_link = LinkedIn,
-            message = Message,
-            resume_data = resumedata
+            first_name=Fname,
+            last_name=Lname,
+            email=Email,
+            phone=Phone,
+            github_link=Github,
+            linked_link=LinkedIn,
+            message=Message,
+            resume_data=resumedata
         )
-
 
         db.session.add(user)
         db.session.commit()
@@ -114,24 +122,23 @@ def getdata():
         return "sorry"
 
 
-@app.route('/viewdata',methods=['GET'])
+@app.route('/viewdata', methods=['GET'])
 def viewdata():
-    data=Basic_info.query.all()
+    data = Basic_info.query.all()
     for user in data:
         print(user.email)
     return ""
 
-@app.route('/recommendation',methods=['POST'])
+
+@app.route('/recommendation', methods=['POST'])
 def recommendation():
     data = request.json
     try:
         valid = get_recommendations(data["category"])
         data = X_train.sort_values(by=['overall_experience'],  ascending=False)
         df = data[data['Name'].apply(lambda x:x in valid)]
-        data = df.to_json(header=None)
-        print(data)
-        print(df.shape)
-        return 'data'
+        data = df.reset_index().to_json(orient="records")
+        return data
     except KeyError:
         return f"Available Category Skills: {X_train['Category'].unique()}"
 
