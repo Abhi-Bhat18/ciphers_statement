@@ -24,8 +24,8 @@ function CollectCv() {
 
 
     return (
-        <section className="bg-gray-100">
-            <div className="mx-auto max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
+        <section className="bg-gray-100 ">
+            <div className="mx-auto shadow-lg max-w-screen-xl px-4 py-16 sm:px-6 lg:px-8">
 
                 <div className=" ">
                     <a href="" className="text-2xl font-bold text-pink-600">

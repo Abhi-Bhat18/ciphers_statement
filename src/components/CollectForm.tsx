@@ -16,8 +16,10 @@ function CollectForm() {
         console.log(Fname, Lname, Email, Phone, LinkedIn, Github, Message)
     }
 
+
+
     return (
-        <div className="rounded-lg mx-auto max-w-screen-xl m-4 content-center bg-white p-8 shadow-lg lg:col-span-3 lg:p-12">
+        <div className="  rounded-lg mx-auto max-w-screen-xl m-4 content-center bg-gray-100 p-8 shadow-lg lg:col-span-3 lg:p-12">
             <form action="" className="space-y-4">
                 <p className='text-xl'>Apply for this job</p>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -107,12 +109,15 @@ function CollectForm() {
                     </fieldset>
                 </div>
                 <div className="mt-4">
+                    <div >
+                        <span className="relative z-0 text-black group-hover:text-gray-200 transition ease-in-out duration-500">Hover over me</span></div>
                     <button
                         type="submit"
                         onClick={() => getData()}
-                        className="inline-flex w-full items-center justify-center rounded-lg bg-black px-5 py-3 text-white sm:w-auto"
+                        className="group [transform:translateZ(0)] px-10 py-3 rounded-lg overflow-hidden bg-gray-900 relative before:absolute before:bg-sky-600 before:top-1/2 before:left-1/2 before:h-8 before:w-8 before:-translate-y-1/2 before:-translate-x-1/2 before:rounded-full before:scale-[0] before:opacity-0 hover:before:scale-[6] hover:before:opacity-100 before:transition before:ease-in-out before:duration-500"
+                    // className="inline-flex w-full items-center justify-center rounded-lg bg-black px-5 py-3 text-white sm:w-auto"
                     >
-                        <span className="font-medium"> Apply </span>
+                        <span className="relative z-0 text-white group-hover:text-gray-200 transition ease-in-out duration-500">Apply</span>
 
                     </button>
                 </div>
