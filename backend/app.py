@@ -57,7 +57,7 @@ def cleanResume(resumeText):
 # Flask app
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///resume.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Candidate_Master.db'
 db = SQLAlchemy(app)
 app.app_context().push()
 CORS(app)
@@ -77,13 +77,9 @@ class Basic_info(db.Model):
     resume_data = db.Column(db.String(1000000), nullable=False)
 
 # Routes
-
-
 @app.route('/', methods=['POST', 'GET'])
 def index():
     return "Hello world"
-
-# Stroring data in data set
 
 
 @app.route('/getdata', methods=['POST'])
@@ -146,9 +142,10 @@ def recommendation():
     try:
         valid = get_recommendations(data["category"])
         data = X_train.sort_values(by=['overall_experience'],  ascending=False)
+        print(valid)
         df = data[data['Name'].apply(lambda x:x in valid)]
-        data = df.reset_index().to_json(orient="records")
-        return data
+        response = df.reset_index().to_json(orient="records")
+        return response
     except KeyError:
         return f"Available Category Skills: {X_train['Category'].unique()}"
 
