@@ -6,39 +6,68 @@ import PyPDF2
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
 
-# Reading data set
-data_frame = pd.read_csv('data/cleaned_dataset.csv')
-# model = pickle.load(open('./models/finalized_model.pkl','rb'))
+
+#importing ML models
+from flask import Flask,render_template
+import pandas as pd
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.metrics.pairwise import cosine_similarity
+
+resume = pd.read_csv("data/cleaned_dataset.csv")
+resume.drop("Category",axis=1,inplace=True)
+old = pd.read_csv("data/UpdatedResumeDataSet.csv")
+resume['Category'] = old['Category']
+
+X = resume[['Category','Name','cleaned_resume','overall_experience']]
+y = resume['Category']
+
+X_train,X_test,y_train,y_test = train_test_split(X,y,random_state=42, test_size=0.2)
+X_train.reset_index(inplace=True)
+X_train.drop("index",axis=1,inplace=True)
+
+tfidf = TfidfVectorizer(stop_words="english")
+tfidf_fit = tfidf.fit_transform(X_train['cleaned_resume'])
+cosine_sim = cosine_similarity(tfidf_fit,tfidf_fit)
+index_sim = pd.Series(X_train.index, index=X_train['Category']).drop_duplicates()
+
+def get_recommendations(title):
+    idx = index_sim[title]
+    sim_scores = list(enumerate(cosine_sim[idx]))
+    sim_scores = sorted(sim_scores, key=lambda x: x[0], reverse=True)
+    sim_scores = sim_scores[1:20]
+    resume_indices = [i[0] for i in sim_scores]
+    return list(X_train['Name'].iloc[resume_indices].values)
 
 
-# Function for finding the category
-def find_category(category):
-    rslt_df = data_frame.loc[data_frame['Category'] == category]
-    rslt_df = rslt_df.loc[:, ["Name", "cleaned_resume"]]
-    category = rslt_df.iloc[0:20]
-    return category
-
-
+#Flask app 
 app = Flask(__name__)
 
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///resume.db'
 db = SQLAlchemy(app)
-
+app.app_context().push()
 
 # Creating Database models
 class Basic_info(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(200), nullable=False)
-    first_name = db.Column(db.String(200), nullable=False)
     last_name = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(200), nullable=False)
+    phone = db.Column(db.String(200), nullable=False)
     github_link = db.Column(db.String(200), nullable=False)
     linked_link = db.Column(db.String(200), nullable=False)
     message = db.Column(db.String(1000000), nullable=False)
     resume_data = db.Column(db.String(1000000), nullable=False)
 
+#Routes
+@app.route('/',methods=['POST','GET'])
+def index():
+    return "Hello world"
 
+#Stroring data in data set     
 @app.route('/getdata', methods=['POST'])
 def getdata():
+    #Collecting data from the request
     data = request.json
     Fname = data['Fname']
     Lname = data["Lname"]
@@ -48,9 +77,8 @@ def getdata():
     LinkedIn = data["Linkedin"]
     Message = data["Message"]
     resumeFile = request.files["resume"]
-    resumeFile.save(secure_filename(resumeFile.filename))
+    resumeFile.save(secure_filename(resumeFile.filename))   
 
-    print(Fname, Lname, Email, Phone, Github, LinkedIn, Message)
     # extracting text from pdf
     pdfFileObj = open(resumeFile.filename, 'rb')
     pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
@@ -61,29 +89,33 @@ def getdata():
     for page in range(pdfReader.numPages):
         pageObj = pdfReader.getPage(page)
         resumedata += pageObj.extractText()
-
     pdfFileObj.close()
 
+    user = Basic_info(
+        first_name = Fname,
+        last_name = Lname,
+        email = Email,
+        phone = Phone,
+        github_link = Github,
+        linkedin_link = LinkedIn,
+        message = Message,
+        resume_data = resumedata
+    )
+
+    db.session.add(user)
+    db.session.commit()
     return {"status": "ok", "data": resumedata}
 
-
-@app.route('/',)
-def index():
-    return "Hello world"
-
-# @app.route('/predict',methods=['POST'])
-# def predict():
-#     '''
-#     For rendering results on HTML GUI
-#     '''
-
-#     int_features = [int(x) for x in request.form.values()]
-#     final_features = [np.array(int_features)]
-#     prediction = model.predict(final_features)
-
-#     output = round(prediction[0], 2)
-
-    # return render_template('index.html', prediction_text='Employee Salary should be $ {}'.format(output))
+@app.route('/recommendation')
+def recommendation():
+    data = request.json
+    try:
+        valid = get_recommendations(data.category)
+        data = X_train.sort_values(by=['overall_experience'],  ascending=False)
+        df = data[data['Name'].apply(lambda x:x in valid)]
+        return df.to_json()
+    except KeyError:
+        return f"Available Category Skills: {X_train['Category'].unique()}"
 
 
 if __name__ == "__main__":
