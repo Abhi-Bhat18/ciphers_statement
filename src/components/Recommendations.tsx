@@ -2,14 +2,12 @@ import React from "react";
 import Footer from "./Footer";
 
 const Recommendations = () => {
-    const getRecommendations = ()=>{
-        return alert('Our top applicants')
-    }
+  const getRecommendations = () => {
+    return alert("Our top applicants");
+  };
   return (
     <div className="container p-2 mx-auto sm:p-4 md:p-0 dark:text-gray-100 shadow-xl space-y-10">
-      <div
-        className="w-full dark:bg-gray-500 bg-[url('D:\QuantumX\ciphers_statement\src\assets\resume2.jpg')] bg-[rgba(73,1,1,0.3)] py-20 bg-center bg-blend-darken bg-cover"
-      >
+      <div className="w-full dark:bg-gray-500 bg-[url('D:\QuantumX\ciphers_statement\src\assets\resume2.jpg')] bg-[rgba(73,1,1,0.3)] py-20 bg-center bg-blend-darken bg-cover">
         <div className="container flex flex-col flex-wrap content-center justify-center  py-20 mx-auto md:p-10 text-white p-4">
           <h1 className="text-5xl antialiased font-semibold leading-none text-center dark:text-gray-100">
             Get Our Top Candidates
@@ -17,22 +15,35 @@ const Recommendations = () => {
           <p className="pt-2 pb-8 text-xl antialiased text-center dark:text-gray-100">
             Find out about skills and experience
           </p>
-          <form className="flex flex-row flex-wrap" onSubmit={getRecommendations}>
-            <input
-              type="text"
-              placeholder="example@email.com"
-              className="w-3/5 p-3 rounded-l-lg sm:w-2/3"
-            />
+          <form
+            className="flex flex-row flex-wrap"
+            onSubmit={getRecommendations}
+          >
+            <div className="flex justify-center">
+              <div className="mb-3 xl:w-96">
+                <select
+                  className="form-select appearance-none block w-full px-3 py-1.5 text-basefont-normal text-gray-700 bg-white bg-clip-padding bg-no-repeat border border-solid border-gray-300 rounded transition ease-in-out m-0
+      focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" aria-label="Default select example"
+                >
+                  <option selected>Open this select menu</option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </select>
+              </div>
+            </div>
             <button
               type="submit"
               className="w-2/5 p-3 font-semibold rounded-r-lg sm:w-1/3 dark:bg-violet-400 dark:text-gray-900"
             >
-                Get applicants
+              Get applicants
             </button>
           </form>
         </div>
       </div>
-      <h2 className="mb-4 text-2xl font-semibold leading-tight text-center">Top Applicants</h2>
+      <h2 className="mb-4 text-2xl font-semibold leading-tight text-center">
+        Top Applicants
+      </h2>
       <div className="overflow-x-auto p-8">
         <table className="w-full p-6 text-xs text-left whitespace-nowrap">
           <thead>
@@ -116,7 +127,7 @@ const Recommendations = () => {
           </tbody>
         </table>
       </div>
-      <Footer/>
+      <Footer />
     </div>
   );
 };

@@ -5,12 +5,9 @@ import pandas as pd
 import PyPDF2
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
-<<<<<<< HEAD
 import re
-=======
 from flask_cors import CORS, cross_origin
 
->>>>>>> 3928df6aa80f8c2870121a4f482144346e7a2c51
 
 # importing ML models
 from flask import Flask, render_template
@@ -155,6 +152,6 @@ def recommendation():
     except KeyError:
         return f"Available Category Skills: {X_train['Category'].unique()}"
 
-
+        
 if __name__ == "__main__":
     app.run(debug=True)
