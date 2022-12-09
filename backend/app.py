@@ -5,6 +5,7 @@ import pandas as pd
 import PyPDF2
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
+from flask_cors import CORS, cross_origin
 
 
 #importing ML models
@@ -46,6 +47,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///resume.db'
 db = SQLAlchemy(app)
 app.app_context().push()
+CORS(app)
 
 # Creating Database models
 class Basic_info(db.Model):
@@ -67,53 +69,69 @@ def index():
 #Stroring data in data set     
 @app.route('/getdata', methods=['POST'])
 def getdata():
-    #Collecting data from the request
-    data = request.json
-    Fname = data['Fname']
-    Lname = data["Lname"]
-    Email = data["Email"]
-    Phone = data["Phone"]
-    Github = data["Github"]
-    LinkedIn = data["Linkedin"]
-    Message = data["Message"]
-    resumeFile = request.files["resume"]
-    resumeFile.save(secure_filename(resumeFile.filename))   
+    try:
+            #Collecting data from the request
+        data = request.form
+        print(data)
+        Fname = data['Fname']
+        Lname = data["Lname"]
+        Email = data["Email"]
+        Phone = data["Phone"]
+        Github = data["Github"]
+        LinkedIn = data["Linkedin"]
+        Message = data["Message"]
+        resumeFile = request.files["resume"]
+        resumeFile.save(secure_filename(resumeFile.filename))   
+        
+        # extracting text from pdf
+        pdfFileObj = open(resumeFile.filename, 'rb')
+        pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
+        # creating a page object
+        resumedata = ""
 
-    # extracting text from pdf
-    pdfFileObj = open(resumeFile.filename, 'rb')
-    pdfReader = PyPDF2.PdfFileReader(pdfFileObj)
-    print(pdfReader.numPages)
-    # creating a page object
-    resumedata = ""
+        for page in range(pdfReader.numPages):
+            pageObj = pdfReader.getPage(page)
+            resumedata += pageObj.extractText()
 
-    for page in range(pdfReader.numPages):
-        pageObj = pdfReader.getPage(page)
-        resumedata += pageObj.extractText()
-    pdfFileObj.close()
+        pdfFileObj.close()
 
-    user = Basic_info(
-        first_name = Fname,
-        last_name = Lname,
-        email = Email,
-        phone = Phone,
-        github_link = Github,
-        linkedin_link = LinkedIn,
-        message = Message,
-        resume_data = resumedata
-    )
+        user = Basic_info(
+            first_name =Fname,
+            last_name = Lname,
+            email = Email,
+            phone = Phone,
+            github_link = Github,
+            linked_link = LinkedIn,
+            message = Message,
+            resume_data = resumedata
+        )
 
-    db.session.add(user)
-    db.session.commit()
-    return {"status": "ok", "data": resumedata}
 
-@app.route('/recommendation')
+        db.session.add(user)
+        db.session.commit()
+        return "done"
+    except:
+        return "sorry"
+
+
+@app.route('/viewdata',methods=['GET'])
+def viewdata():
+    data=Basic_info.query.all()
+    for user in data:
+        print(user.email)
+    return ""
+
+@app.route('/recommendation',methods=['POST'])
 def recommendation():
     data = request.json
     try:
-        valid = get_recommendations(data.category)
+        valid = get_recommendations(data["category"])
         data = X_train.sort_values(by=['overall_experience'],  ascending=False)
         df = data[data['Name'].apply(lambda x:x in valid)]
-        return df.to_json()
+        data = df.to_json(header=None)
+        print(data)
+        print(df.shape)
+        return 'data'
     except KeyError:
         return f"Available Category Skills: {X_train['Category'].unique()}"
 

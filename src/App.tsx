@@ -6,12 +6,14 @@ import NavBar from './components/NavBar';
 function App() {
 
   return (
-    <div className="">
-      <NavBar />
-      <EntryPoint />
-      <Features />
-      <Footer/>
+    <div className='bg-gray-900'>
+      <div className="max-w-6xl mx-auto ">
+        <NavBar />
+        <EntryPoint />
+        <Features />
+        <Footer />
 
+      </div>
     </div>
   )
 }
