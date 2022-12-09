@@ -3,10 +3,10 @@ import { OpeningsData } from '../static/OpeningData'
 function Openings() {
     return (
         <div className="overflow bg-[url(https://w.wallhaven.cc/full/l8/wallhaven-l8mz5r.png)] bg-cover bg-center bg-no-repeat">
-            <h2 className="pt-20 pl-20 text-2xl font-bold text-white sm:text-3xl md:text-5xl">
+            <h2 className="mx-auto ml-96 pt-20 text-2xl font-bold text-white sm:text-3xl md:text-5xl">
                 Apply to Current Openings
             </h2>
-            <div className=' overflow-scroll grid grid-cols-4 m-4 '>
+            <div className='mx-auto shadow-lg max-w-screen-xl  overflow-scroll grid grid-cols-2 m-4 '>
                 {OpeningsData?.map((data) => {
                     const { company, company_description, id, role, role_description, responsibility, benefits, requirement } = data
                     return (

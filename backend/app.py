@@ -2,10 +2,22 @@ import numpy as np
 from flask import Flask, request, jsonify, render_template
 import pickle
 import pandas as pd
+import PyPDF2
 
 # Reading data set
 data_frame = pd.read_csv('data/cleaned_dataset.csv')
 # model = pickle.load(open('./models/finalized_model.pkl','rb'))
+
+# extracting text from pdf
+pdfFileObj = open('data/sample.pdf', 'rb') 
+pdfReader = PyPDF2.PdfFileReader(pdfFileObj) 
+print(pdfReader.numPages) 
+# creating a page object 
+pageObj = pdfReader.getPage(0) 
+# extracting text from page 
+print(pageObj.extractText()) 
+# closing the pdf file object 
+pdfFileObj.close() 
 
 #Function for finding the category 
 def find_category(category):
