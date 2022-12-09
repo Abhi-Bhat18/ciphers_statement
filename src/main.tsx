@@ -8,6 +8,7 @@ import {
 
 import App from './App'
 import Openings from './components/Openings';
+import Recommendations from './components/Recommendations';
 import './index.css'
 import CollectCv from './screens/cvCollect';
 
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
   {
     path: "/showopenings",
     element: <Openings />,
+  },
+  {
+    path: "/recommendations",
+    element: <Recommendations/>,
   },
   {
     path: "/:company/:role",
