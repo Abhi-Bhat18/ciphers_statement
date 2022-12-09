@@ -5,7 +5,7 @@ import pandas as pd
 import PyPDF2
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
-
+import re
 
 #importing ML models
 from flask import Flask,render_template
@@ -39,6 +39,15 @@ def get_recommendations(title):
     resume_indices = [i[0] for i in sim_scores]
     return list(X_train['Name'].iloc[resume_indices].values)
 
+def cleanResume(resumeText):
+    resumeText = re.sub('http\S+\s*', ' ', resumeText)  # remove URLs
+    resumeText = re.sub('RT|cc', ' ', resumeText)  # remove RT and cc
+    resumeText = re.sub('#\S+', '', resumeText)  # remove hashtags
+    resumeText = re.sub('@\S+', '  ', resumeText)  # remove mentions
+    resumeText = re.sub('[%s]' % re.escape("""!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"""), ' ', resumeText)  # remove punctuations
+    resumeText = re.sub(r'[^\x00-\x7f]',r' ', resumeText) 
+    resumeText = re.sub('\s+', ' ', resumeText)  # remove extra whitespace
+    return resumeText
 
 #Flask app 
 app = Flask(__name__)
@@ -65,7 +74,7 @@ def index():
     return "Hello world"
 
 #Stroring data in data set     
-@app.route('/getdata', methods=['POST'])
+@app.route('/getdata', methods=['POST','GET'])
 def getdata():
     #Collecting data from the request
     data = request.json
@@ -90,6 +99,8 @@ def getdata():
         pageObj = pdfReader.getPage(page)
         resumedata += pageObj.extractText()
     pdfFileObj.close()
+    print(resumedata)
+    cleaned_resume = cleanResume(resumedata);
 
     user = Basic_info(
         first_name = Fname,
@@ -97,13 +108,15 @@ def getdata():
         email = Email,
         phone = Phone,
         github_link = Github,
-        linkedin_link = LinkedIn,
+        linked_link = LinkedIn,
         message = Message,
         resume_data = resumedata
     )
-
+    
     db.session.add(user)
     db.session.commit()
+
+
     return {"status": "ok", "data": resumedata}
 
 @app.route('/recommendation')

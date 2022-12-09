@@ -17,7 +17,7 @@ const Recommendations = () => {
           <p className="pt-2 pb-8 text-xl antialiased text-center dark:text-gray-100">
             Find out about skills and experience
           </p>
-          <form className="flex flex-row" onSubmit={getRecommendations}>
+          <form className="flex flex-row flex-wrap" onSubmit={getRecommendations}>
             <input
               type="text"
               placeholder="example@email.com"
