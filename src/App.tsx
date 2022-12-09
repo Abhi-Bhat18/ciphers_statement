@@ -5,7 +5,7 @@ import CollectCv from './screens/cvCollect';
 import EntryPoint from './screens/EntryPoint';
 import Particles from "react-particles";
 import { loadFull } from "tsparticles";
-
+import Footer from './components/Footer'
 function App() {
   const particlesInit = useCallback(async engine => {
     console.log(engine);
@@ -19,13 +19,12 @@ function App() {
     await console.log(container);
   }, []);
 
-
-
   return (
     <div className="">
       <EntryPoint />
       <Features />
       <Particles id="tsparticles" url='/static/confetti.json' init={particlesInit} loaded={particlesLoaded} />
+      <Footer/>
     </div>
   )
 }

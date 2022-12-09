@@ -8,15 +8,10 @@ function CollectForm() {
     const [LinkedIn, setLinkedIn] = useState("")
     const [Github, setGithub] = useState("")
     const [Message, setMessage] = useState("")
-
-
-
-
+    
     function getData() {
         console.log(Fname, Lname, Email, Phone, LinkedIn, Github, Message)
     }
-
-
 
     return (
         <div className="  rounded-lg mx-auto max-w-screen-xl m-4 content-center bg-gray-100 p-8 shadow-lg lg:col-span-3 lg:p-12">
