@@ -144,8 +144,13 @@ def recommendation():
         data = X_train.sort_values(by=['overall_experience'],  ascending=False)
         print(valid)
         df = data[data['Name'].apply(lambda x:x in valid)]
+<<<<<<< HEAD
         response = df.reset_index().to_json(orient="records")
         return response
+=======
+        data = df.reset_index().to_json(orient="records")
+        return data,200
+>>>>>>> eba205fee5282c7a82ebc61b5d447039bead4c02
     except KeyError:
         return f"Available Category Skills: {X_train['Category'].unique()}"
 
