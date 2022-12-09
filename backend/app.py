@@ -21,7 +21,7 @@ resume.drop("Category", axis=1, inplace=True)
 old = pd.read_csv("data/UpdatedResumeDataSet.csv")
 resume['Category'] = old['Category']
 
-X = resume[['Category', 'Name', 'cleaned_resume', 'overall_experience']]
+X = resume[['Category', 'Name','address','phone','cleaned_resume', 'overall_experience']]
 y = resume['Category']
 
 X_train, X_test, y_train, y_test = train_test_split(
