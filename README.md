@@ -18,7 +18,7 @@ We worked on two projects:
 # Teammates
 
 - *Raghavyuva* - Comp Sci Student - [Raghavyuva](https://raghavyuva.com/)
-- *lucifertrj* - E&C  Student - [Tarun R Jain](https://raghavyuva.com/) 
+- *lucifertrj* - E&C  Student - [Tarun R Jain](https://github.com/lucifertrj) 
 - *abhi-bhat18* - E&C  Student - [Abhishek Bhat](https://github.com/Abhi-Bhat18) 
 
 ## Features
@@ -41,3 +41,5 @@ We worked on two projects:
 ### Click the Image to view our presentation
 
 <a href="https://www.canva.com/design/DAFUS7I2KkA/sA5LbG-NrZ4ESXALydXbTA/view?utm_content=DAFUS7I2KkA&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton"><img src="https://user-images.githubusercontent.com/66197713/206827330-acc2a3d8-e783-4446-b069-8311c824a87b.png"></a>
+
+### [Download Presentation PDF](https://github.com/raghavyuva/ciphers_statement/blob/master/src/assets/Ciphers.pdf)
