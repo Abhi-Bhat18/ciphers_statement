@@ -1,6 +1,6 @@
 import React from "react";
-
-const Feature = () => {
+const descriptions = "Cosine similarity is a metric used to measure how similar the documents are irrespective of their size. Mathematically, it measures the cosine of the angle between two vectors projected in a multi-dimensional space."
+const Feature = ({feature = '2 layered Screening', description=descriptions}) => {
   return (
     <div className="flex items-start">
     <span className="flex-shrink-0 rounded-lg bg-gray-800 p-4">
@@ -25,12 +25,10 @@ const Feature = () => {
     </span>
 
     <div className="ml-4">
-        <h2 className="text-lg font-bold">Lorem, ipsum dolor.</h2>
+        <h2 className="text-lg font-bold">{feature}</h2>
 
         <p className="mt-1 text-sm text-gray-300">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
-            cumque tempore est ab possimus quisquam reiciendis tempora animi!
-            Quaerat, saepe?
+           {description}
         </p>
     </div>
 </div>
