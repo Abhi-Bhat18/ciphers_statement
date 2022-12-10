@@ -5,6 +5,7 @@ import pandas as pd
 import PyPDF2
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.utils import secure_filename
+import re
 from flask_cors import CORS, cross_origin
 
 
@@ -43,11 +44,20 @@ def get_recommendations(title):
     resume_indices = [i[0] for i in sim_scores]
     return list(X_train['Name'].iloc[resume_indices].values)
 
+def cleanResume(resumeText):
+    resumeText = re.sub('http\S+\s*', ' ', resumeText)  # remove URLs
+    resumeText = re.sub('RT|cc', ' ', resumeText)  # remove RT and cc
+    resumeText = re.sub('#\S+', '', resumeText)  # remove hashtags
+    resumeText = re.sub('@\S+', '  ', resumeText)  # remove mentions
+    resumeText = re.sub('[%s]' % re.escape("""!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~"""), ' ', resumeText)  # remove punctuations
+    resumeText = re.sub(r'[^\x00-\x7f]',r' ', resumeText) 
+    resumeText = re.sub('\s+', ' ', resumeText)  # remove extra whitespace
+    return resumeText
 
 # Flask app
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///resume.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Candidate_Master.db'
 db = SQLAlchemy(app)
 app.app_context().push()
 CORS(app)
@@ -67,13 +77,9 @@ class Basic_info(db.Model):
     resume_data = db.Column(db.String(1000000), nullable=False)
 
 # Routes
-
-
 @app.route('/', methods=['POST', 'GET'])
 def index():
     return "Hello world"
-
-# Stroring data in data set
 
 
 @app.route('/getdata', methods=['POST'])
@@ -133,15 +139,24 @@ def viewdata():
 @app.route('/recommendation', methods=['POST'])
 def recommendation():
     data = request.json
+    limit = data['experience']
+    limits = limit.split('-')
+    print(len(limits))
     try:
         valid = get_recommendations(data["category"])
-        data = X_train.sort_values(by=['overall_experience'],  ascending=False)
+        data = X_train.sort_values(by=['overall_experience'],  ascending=False) 
         df = data[data['Name'].apply(lambda x:x in valid)]
-        data = df.reset_index().to_json(orient="records")
+        if len(limits)>1:
+            df = df[df['overall_experience']>= int(limits[0])]
+            data = df[df['overall_experience']<= int(limits[1])]
+        else:
+            data = df[df['overall_experience']>= 5]
+        print(data)
+        data = data.reset_index().to_json(orient="records")
         return data,200
     except KeyError:
         return f"Available Category Skills: {X_train['Category'].unique()}"
 
-
+        
 if __name__ == "__main__":
     app.run(debug=True)
