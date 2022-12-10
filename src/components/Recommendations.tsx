@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Footer from "./Footer";
+import NavBar from "./NavBar";
 import Table from "./Table";
 const Recommendations = () => {
 
@@ -47,8 +48,9 @@ const Recommendations = () => {
 
   return (
     <div className="container p-2 mx-auto sm:p-4 md:p-0 dark:text-gray-100 bg-gray-800 shadow-xl space-y-10">
+      <NavBar/>
       <div
-        className="w-full dark:bg-gray-700 bg-[url('D:\QuantumX\ciphers_statement\src\assets\resume2.jpg')] bg-[rgba(73,1,1,0.3)] py-20 bg-center bg-blend-darken bg-cover"
+        className="w-full dark:bg-gray-700 bg-[url('D:\QuantumX\ciphers_statement\src\assets\resume2.jpg')] bg-[rgba(73,1,1,0.6)] py-20 bg-center bg-blend-darken bg-cover"
       >
         <div className="container flex flex-col flex-wrap content-center justify-center  py-20 mx-auto md:p-10 text-white p-4">
           <h1 className="text-5xl antialiased font-semibold leading-none text-center dark:text-gray-100">
@@ -58,7 +60,7 @@ const Recommendations = () => {
             Find out about skills and experience
           </p>
           <form
-            className="flex flex-row flex-wrap"
+            className="flex flex-row flex-wrap justify-center items-center"
             onSubmit={getRecommendations}
           >
             <div className="flex justify-center items-center">
@@ -90,7 +92,7 @@ const Recommendations = () => {
             </div>
             <button
               type="submit"
-              className="p-3 font-semibold rounded-r-lg sm:w-1/3 dark:bg-violet-400 dark:text-gray-900 flex justify-center items-center"
+              className="p-3 font-semibold rounded-r-lg sm:w-1/3 bg-gray-700  text-white dark:bg-violet-400 dark:text-gray-900 flex justify-center items-center"
             >
               Get applicants
             </button>

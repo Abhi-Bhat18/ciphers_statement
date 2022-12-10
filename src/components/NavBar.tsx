@@ -85,8 +85,8 @@ function NavBar() {
                         aria-label="Site Nav"
                         className="hidden items-center justify-center gap-8 text-sm font-medium lg:flex lg:w-0 lg:flex-1"
                     >
+                        <a className="/" href="">Home</a>
                         <a className="" href="">About</a>
-                        <a className="" href="">Blog</a>
                         <a className="" href="">Projects</a>
                         <a className="" href="">Contact</a>
                     </nav>

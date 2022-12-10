@@ -21,7 +21,7 @@ resume.drop("Category", axis=1, inplace=True)
 old = pd.read_csv("data/UpdatedResumeDataSet.csv")
 resume['Category'] = old['Category']
 
-X = resume[['Category', 'Name','address','phone','cleaned_resume', 'overall_experience']]
+X = resume[['Category', 'Name','address','phone','cleaned_resume', 'overall_experience','score']]
 y = resume['Category']
 
 X_train, X_test, y_train, y_test = train_test_split(
@@ -133,18 +133,19 @@ def viewdata():
     data = Basic_info.query.all()
     for user in data:
         print(user.email)
-    return ""
+    return 
 
 
 @app.route('/recommendation', methods=['POST'])
 def recommendation():
-    data = request.json
-    limit = data['experience']
+
+    inp = request.json
+    limit = inp['experience']
     limits = limit.split('-')
-    print(len(limits))
     try:
-        valid = get_recommendations(data["category"])
+        valid = get_recommendations(inp["category"])
         data = X_train.sort_values(by=['overall_experience'],  ascending=False) 
+        data = data.sort_values(by=['score'],ascending=False)
         df = data[data['Name'].apply(lambda x:x in valid)]
         if len(limits)>1:
             df = df[df['overall_experience']>= int(limits[0])]
