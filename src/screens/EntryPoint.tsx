@@ -1,19 +1,27 @@
 import React from 'react'
-
+import { Typewriter } from 'react-simple-typewriter'
 function EntryPoint() {
     return (
         <section
             className="overflow-hidden bg-[url(https://w.wallhaven.cc/full/l8/wallhaven-l8mz5r.png)] bg-cover bg-center bg-no-repeat"
         >
             <div className="bg-black/25 p-8 md:p-12 lg:px-16 lg:py-24">
-                <div className="max-w-lg text-center sm:text-left">
-                    <h2 className="text-2xl font-bold text-white sm:text-3xl md:text-5xl">
+                <div className="max-w-lg text-white text-4xl text-center sm:text-left">
+                <Typewriter
+                            words={[ 'Cipher', 'Recruitment',"Vision"]}
+                            loop={5}
+                            typeSpeed={70}
+                            deleteSpeed={50}
+                            
+                            delaySpeed={1000}
+                        /> 
+                    {/* <h2 className="text-2xl font-bold text-white sm:text-3xl md:text-5xl">
                         Cipher recruitment vision
-                    </h2>
+                    </h2> */}
                     <p
                         className="hidden max-w-md text-white/90 md:mt-6 md:block md:text-lg md:leading-relaxed"
                     >
-                       We help with 3A ( Assess, Analyze, Adapt) to bring your New Employee. You hire us and we take care of everything else
+                        We help with 3A ( Assess, Analyze, Adapt) to bring your New Employee. You hire us and we take care of everything else
                     </p>
                     <div className="mt-4 sm:mt-8 space-x-5">
                         <a
