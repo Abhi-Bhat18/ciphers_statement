@@ -15,6 +15,17 @@ We worked on two projects:
 <br/>
 <br/>
 
+# Run the Program
+
+1. 
+```
+npm install
+```
+2.
+```
+npm run dev
+```
+
 # Teammates
 
 - *Raghavyuva* - Comp Sci Student - [Raghavyuva](https://raghavyuva.com/)
