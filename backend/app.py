@@ -139,18 +139,21 @@ def viewdata():
 @app.route('/recommendation', methods=['POST'])
 def recommendation():
     data = request.json
+    limit = data['experience']
+    limits = limit.split('-')
+    print(len(limits))
     try:
         valid = get_recommendations(data["category"])
-        data = X_train.sort_values(by=['overall_experience'],  ascending=False)
-        print(valid)
+        data = X_train.sort_values(by=['overall_experience'],  ascending=False) 
         df = data[data['Name'].apply(lambda x:x in valid)]
-<<<<<<< HEAD
-        response = df.reset_index().to_json(orient="records")
-        return response
-=======
-        data = df.reset_index().to_json(orient="records")
+        if len(limits)>1:
+            df = df[df['overall_experience']>= int(limits[0])]
+            data = df[df['overall_experience']<= int(limits[1])]
+        else:
+            data = df[df['overall_experience']>= 5]
+        print(data)
+        data = data.reset_index().to_json(orient="records")
         return data,200
->>>>>>> eba205fee5282c7a82ebc61b5d447039bead4c02
     except KeyError:
         return f"Available Category Skills: {X_train['Category'].unique()}"
 
