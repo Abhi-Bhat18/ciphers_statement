@@ -2,13 +2,13 @@ import React, { useEffect, useState } from "react";
 import Footer from "./Footer";
 import NavBar from "./NavBar";
 import Table from "./Table";
+
 const Recommendations = () => {
 
   const [Data, setData] = useState([])
   const [category, setCategory] = useState("")
   const [experience, setExperience] = useState('')
-  console.log(category)
-  console.log(experience)
+
   const categories = ['Data Science', 'HR', 'Advocate', 'Arts', 'Web Designing',
        'Mechanical Engineer', 'Sales', 'Health and fitness',
        'Civil Engineer', 'Java Developer', 'Business Analyst',
@@ -20,7 +20,6 @@ const Recommendations = () => {
     '0-1','1-2','2-3','3-4','4-5','5+'
   ]
 
-  
   const getRecommendations = async (e) => {
     e.preventDefault()
 
@@ -50,7 +49,7 @@ const Recommendations = () => {
     <div className="container p-2 mx-auto sm:p-4 md:p-0 dark:text-gray-100 bg-gray-800 shadow-xl space-y-10">
       <NavBar/>
       <div
-        className="w-full dark:bg-gray-700 bg-[url('D:\QuantumX\ciphers_statement\src\assets\resume2.jpg')] bg-[rgba(73,1,1,0.6)] py-20 bg-center bg-blend-darken bg-cover"
+        className="w-full dark:bg-gray-700 bg-[url('https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MTZ8fHJlc3VtZXxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60')] bg-[rgba(73,1,1,0.6)] py-20 bg-center bg-blend-darken bg-cover"
       >
         <div className="container flex flex-col flex-wrap content-center justify-center  py-20 mx-auto md:p-10 text-white p-4">
           <h1 className="text-5xl antialiased font-semibold leading-none text-center dark:text-gray-100">
@@ -60,7 +59,7 @@ const Recommendations = () => {
             Find out about skills and experience
           </p>
           <form
-            className="flex flex-row flex-wrap justify-center items-center"
+            className="flex flex-col flex-wrap justify-center items-center"
             onSubmit={getRecommendations}
           >
             <div className="flex justify-center items-center">
